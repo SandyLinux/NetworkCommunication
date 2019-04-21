@@ -3,7 +3,10 @@ from getpass import getpass
 import time,socket
 from multiprocessing import Process, Pipe
 
-def f1(conn):
+def msgSender(conn):
+    """
+    use child process to feed the command to host via ssh connection
+    """
     msglist = ['show run', 'show ip int br', 'show clock', 'show int trunk', 'exit']
     for msg in  msglist:
         
@@ -36,7 +39,7 @@ def main():
         time.sleep(1)
         output = remote_conn.recv(65535)
         print ('----2',output)
-        p = Process(target=f1, args=(child_conn,))
+        p = Process(target=msgSender, args=(child_conn,))
         p.start()
         
         for _ in range(5):
